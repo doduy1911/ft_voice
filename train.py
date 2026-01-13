@@ -145,7 +145,7 @@ def main():
         dataloader_num_workers=cfg.dataloader_num_workers,    
         report_to=["tensorboard"],
         fp16=True,
-        bf16=True,
+        bf16=False,
         save_total_limit=cfg.save_total_limit,
         gradient_checkpointing=True, # This setting theoretically reduces VRAM usage by 60%.
     )
