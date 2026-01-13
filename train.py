@@ -144,7 +144,7 @@ def main():
         remove_unused_columns=False, # Required for our custom wrapper
         dataloader_num_workers=cfg.dataloader_num_workers,    
         report_to=["tensorboard"],
-        fp16=False,
+        fp16=True,
         bf16=True,
         save_total_limit=cfg.save_total_limit,
         gradient_checkpointing=True, # This setting theoretically reduces VRAM usage by 60%.
