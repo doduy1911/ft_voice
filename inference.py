@@ -27,7 +27,7 @@ OUTPUT_DIR = cfg.output_dir
 
 if IS_TURBO:
     
-    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_turbo_finetuned.safetensors")
+    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "model.safetensors")
     PARAMS = {
         "temperature": 0.8,
         "exaggeration": 0.5,
@@ -35,7 +35,7 @@ if IS_TURBO:
     }
 else:
     
-    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_finetuned.safetensors")
+    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "model.safetensors")
     PARAMS = {
         "temperature": 0.8,
         "exaggeration": 0.5,
@@ -44,8 +44,8 @@ else:
     }
 
 
-TEXT_TO_SAY = "Bu, artık hem normal hem de turbo modelleri otomatik olarak destekleyen yeni çıkarım komut dosyasının bir testidir."
-AUDIO_PROMPT = "./reference.wav"
+TEXT_TO_SAY = "Xin chào, đây là kết quả giọng nói tiếng Việt sau khi fine-tune."
+AUDIO_PROMPT = "./audio.wav"
 OUTPUT_FILE = "./output.wav"
 
 

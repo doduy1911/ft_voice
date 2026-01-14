@@ -146,7 +146,7 @@ def main():
         report_to=["tensorboard"],
         fp16=True,
         bf16=False,
-        save_total_limit=cfg.save_total_limit,
+        save_total_limit=1,
         gradient_checkpointing=True, # This setting theoretically reduces VRAM usage by 60%.
     )
 
