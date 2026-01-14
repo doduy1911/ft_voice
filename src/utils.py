@@ -40,9 +40,10 @@ def load_vad_model():
     try:
         
         #print("Loading Silero VAD model...")
-        
+        local_vad_path = '/home/duydo/code/ft_voice/snakers4-silero-vad-2688a6e'
         model, utils = torch.hub.load(
-            repo_or_dir='snakers4/silero-vad',
+            repo_or_dir=local_vad_path,
+            source='local',
             model='silero_vad',
             force_reload=False,
             trust_repo=True

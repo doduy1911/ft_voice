@@ -27,7 +27,7 @@ OUTPUT_DIR = cfg.output_dir
 
 if IS_TURBO:
     
-    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_turbo_finetuned.safetensors")
+    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_ml24ls_v2.safetensors")
     PARAMS = {
         "temperature": 0.8,
         "exaggeration": 0.5,
@@ -44,8 +44,8 @@ else:
     }
 
 
-TEXT_TO_SAY = "Ở gần trăm năm chinh chiến hạ, tái bác Thiên Đình chi chủ Tô Mộc, rốt cuộc đem toàn bộ tinh vực chinh phục, đem này quy hoạch trở thành chính mình địa bàn."
-AUDIO_PROMPT = "./audio.wav"
+TEXT_TO_SAY = "Mới thử xong, bắt chước giọng nói tệ quá. Nếu bạn đang tìm cái gì tương tự, thử VoxCPM đi, mới ra mắt có vài ngày thôi. Chả được chú ý như nó đáng."
+AUDIO_PROMPT = "./f994d645fc6b26bb36adc48cdbeb8a5b.wav"
 OUTPUT_FILE = "./output.wav"
 
 
