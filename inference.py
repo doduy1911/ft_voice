@@ -27,7 +27,7 @@ OUTPUT_DIR = cfg.output_dir
 
 if IS_TURBO:
     
-    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "model.safetensors")
+    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_turbo_finetuned.safetensors")
     PARAMS = {
         "temperature": 0.8,
         "exaggeration": 0.5,
@@ -35,7 +35,7 @@ if IS_TURBO:
     }
 else:
     
-    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "model.safetensors")
+    FINETUNED_WEIGHTS = os.path.join(OUTPUT_DIR, "t3_finetuned.safetensors")
     PARAMS = {
         "temperature": 0.8,
         "exaggeration": 0.5,
@@ -44,7 +44,7 @@ else:
     }
 
 
-TEXT_TO_SAY = "Xin chào, đây là kết quả giọng nói tiếng Việt sau khi fine-tune."
+TEXT_TO_SAY = "Ở gần trăm năm chinh chiến hạ, tái bác Thiên Đình chi chủ Tô Mộc, rốt cuộc đem toàn bộ tinh vực chinh phục, đem này quy hoạch trở thành chính mình địa bàn."
 AUDIO_PROMPT = "./audio.wav"
 OUTPUT_FILE = "./output.wav"
 
