@@ -41,7 +41,7 @@ class TrainConfig:
     batch_size: int = 8        # Adjust based on VRAM (2, 4, 8)
     grad_accum: int = 1        # Effective Batch Size = Batch * Accum
     learning_rate: float = 1e-5 # T3 is sensitive, keep low
-    num_epochs: int = 150
+    num_epochs: int = 100
     
     save_steps: int = 1000
     save_total_limit: int = 2
