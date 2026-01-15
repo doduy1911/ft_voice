@@ -12,7 +12,7 @@ DATASET_NAME = "pnnbao-ump/VieNeu-TTS-140h"
 OUTPUT_DIR = "MyTTSDataset"
 WAV_DIR = os.path.join(OUTPUT_DIR, "wavs")
 METADATA_PATH = os.path.join(OUTPUT_DIR, "metadata.csv")
-MAX_SAMPLES = 2000
+MAX_SAMPLES = 20
 HF_TOKEN = os.getenv("HF_TOKEN")   
 def main():
     print(f"Dang tai dataset: {DATASET_NAME}...")
