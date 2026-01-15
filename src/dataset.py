@@ -5,7 +5,10 @@ from torch.nn.utils.rnn import pad_sequence
 
 from src.utils import setup_logger
 
+
 logger = setup_logger(__name__)
+
+
 
 class ChatterboxDataset(Dataset):
     
@@ -13,9 +16,6 @@ class ChatterboxDataset(Dataset):
         self.cfg = config
         self.preprocessed_dir = config.preprocessed_dir
         
-        # In ra đường dẫn thư mục đang tìm để bạn kiểm tra
-        print(f"DEBUG: Checking preprocessed directory at: {self.preprocessed_dir}")
-
         if not os.path.exists(self.preprocessed_dir):
             raise FileNotFoundError(f"Preprocessing folder not found: {self.preprocessed_dir}.")
             
@@ -29,25 +29,20 @@ class ChatterboxDataset(Dataset):
         self.sot_token = config.start_text_token 
         self.eot_token = config.stop_text_token
 
+
     def __len__(self):
         return len(self.files)
 
     def __getitem__(self, idx):
+        
         try:
+            
             filename = self.files[idx]
+            
             pt_path = os.path.join(self.preprocessed_dir, filename)
             
-            # --- ĐOẠN CODE DEBUG MỚI THÊM VÀO ---
-            # Chỉ in ra thông tin của file đầu tiên (index 0) để tránh spam log
-            if idx == 0:
-                print("\n" + "="*40)
-                print(f"DEBUG: Loading dataset item index {idx}")
-                print(f"DEBUG: File path: {pt_path}")
-                print(f"DEBUG: Does file exist? {os.path.exists(pt_path)}")
-                print("="*40 + "\n")
-            # ------------------------------------
-            
             data = torch.load(pt_path)
+            
             
             text_tokens = data["text_tokens"]
             if text_tokens.size(0) > self.cfg.max_text_len - 2:
@@ -68,11 +63,14 @@ class ChatterboxDataset(Dataset):
                 "prompt_tokens": data["prompt_tokens"]
             }
 
+
         except Exception as e:
             logger.error(f"Error loading {filename}: {e}")
             return None
 
+
 def data_collator(batch):
+
     batch = [item for item in batch if item is not None]
     if not batch: 
         return {}
@@ -87,6 +85,7 @@ def data_collator(batch):
     # Lengths
     text_lens = torch.tensor([len(x["text_tokens"]) for x in batch], dtype=torch.long)
     speech_lens = torch.tensor([len(x["speech_tokens"]) for x in batch], dtype=torch.long)
+
 
     return {
         "text_tokens": text_tokens,
