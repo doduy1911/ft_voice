@@ -20,7 +20,6 @@ CHATTERBOX_TURBO_FILES = {
     "tokenizer_config.json": "https://huggingface.co/ResembleAI/chatterbox-turbo/resolve/main/tokenizer_config.json?download=true",
     "merges.txt": "https://huggingface.co/ResembleAI/chatterbox-turbo/resolve/main/merges.txt?download=true",
     "grapheme_mtl_merged_expanded_v1.json": "https://huggingface.co/dolly-vn/viterbox/resolve/main/tokenizer_vi_expanded.json?download=true",
-    "tokenizer.json": "https://huggingface.co/dolly-vn/viterbox/resolve/main/tokenizer_vi_expanded.json?download=true"
 
 }
 
@@ -72,87 +71,87 @@ def download_file(url, dest_path):
 
 
 
-# def merge_and_save_turbo_tokenizer():
-#     """
-#     It combines the downloaded original GPT-2 tokenizer with our custom vocab
-#     and overwrites the original files.
-#     """
-#     print("\n--- Turbo Vocab Merging Begins ---")
-    
-#     try:
-#         base_tokenizer = AutoTokenizer.from_pretrained("gpt2-medium")
-#     except Exception as e:
-#         print(f"ERROR: The original tokenizer could not be loaded. Did you download the files correctly? -> {e}")
-#         return 0
-        
-        
-#     initial_len = len(base_tokenizer)
-#     print(f"   Original Size: {initial_len}")
-
-
-#     custom_vocab_path = os.path.join(DEST_DIR, "grapheme_mtl_merged_expanded_v1.json")
-    
-#     print(f"Loading: Custom Vocab ({custom_vocab_path})")
-    
-#     with open(custom_vocab_path, 'r', encoding='utf-8') as f:
-#         custom_data = json.load(f)
-
-
-#     if "model" in custom_data and "vocab" in custom_data["model"]:
-#         vocab_dict = custom_data["model"]["vocab"]
-        
-#     else:
-#         print("Warning: The custom VOCAB format may differ from what is expected.")
-#         return 0
-
-#     unique_tokens_to_add = list(vocab_dict.keys())
-#     added_count = base_tokenizer.add_tokens(unique_tokens_to_add)
-#     final_len = len(base_tokenizer)
-
-#     print(f"Merging: {added_count} new token added.")
-#     print(f"   New Dimension: {final_len}")
-
-
-#     print(f"Saving: Writing the combined tokenizer to the '{DEST_DIR}' folder...")
-#     base_tokenizer.save_pretrained(DEST_DIR)
-    
-#     print("MERGER SUCCESSFUL!")
-    
-#     return final_len
-
-
-
 def merge_and_save_turbo_tokenizer():
     """
-    MODIFIED: Bỏ qua việc merge để không làm hỏng file Viterbox của bạn.
-    Thay vào đó, nó load tokenizer hiện tại trong thư mục để đếm số lượng token.
+    It combines the downloaded original GPT-2 tokenizer with our custom vocab
+    and overwrites the original files.
     """
-    print("\n--- Turbo Vocab Merging SKIPPED (Preserving your Viterbox file) ---")
+    print("\n--- Turbo Vocab Merging Begins ---")
     
-    # Kiểm tra xem folder có tồn tại không
-    if not os.path.exists(DEST_DIR):
-        print(f"Error: Directory {DEST_DIR} not found.")
-        return 0
-
     try:
-        # Thay vì tạo mới từ GPT-2, ta load trực tiếp file bạn đang có
-        print(f"Loading existing tokenizer from: {DEST_DIR} ...")
-        
-        # AutoTokenizer sẽ tự tìm file tokenizer.json trong thư mục này
-        current_tokenizer = AutoTokenizer.from_pretrained(DEST_DIR)
-        
-        final_len = len(current_tokenizer)
-        
-        print(f"   SUCCESS! Loaded tokenizer successfully.")
-        print(f"   Current Vocab Size (Final Len): {final_len}")
-        print("   (No changes were made to the file)")
-
-        return final_len
-
+        base_tokenizer = AutoTokenizer.from_pretrained("gpt2-medium")
     except Exception as e:
-        print(f"ERROR: Không thể đọc Tokenizer từ {DEST_DIR}.")
-        print(f"Details: {e}")
+        print(f"ERROR: The original tokenizer could not be loaded. Did you download the files correctly? -> {e}")
         return 0
+        
+        
+    initial_len = len(base_tokenizer)
+    print(f"   Original Size: {initial_len}")
+
+
+    custom_vocab_path = os.path.join(DEST_DIR, "grapheme_mtl_merged_expanded_v1.json")
+    
+    print(f"Loading: Custom Vocab ({custom_vocab_path})")
+    
+    with open(custom_vocab_path, 'r', encoding='utf-8') as f:
+        custom_data = json.load(f)
+
+
+    if "model" in custom_data and "vocab" in custom_data["model"]:
+        vocab_dict = custom_data["model"]["vocab"]
+        
+    else:
+        print("Warning: The custom VOCAB format may differ from what is expected.")
+        return 0
+
+    unique_tokens_to_add = list(vocab_dict.keys())
+    added_count = base_tokenizer.add_tokens(unique_tokens_to_add)
+    final_len = len(base_tokenizer)
+
+    print(f"Merging: {added_count} new token added.")
+    print(f"   New Dimension: {final_len}")
+
+
+    print(f"Saving: Writing the combined tokenizer to the '{DEST_DIR}' folder...")
+    base_tokenizer.save_pretrained(DEST_DIR)
+    
+    print("MERGER SUCCESSFUL!")
+    
+    return final_len
+
+
+
+# def merge_and_save_turbo_tokenizer():
+#     """
+#     MODIFIED: Bỏ qua việc merge để không làm hỏng file Viterbox của bạn.
+#     Thay vào đó, nó load tokenizer hiện tại trong thư mục để đếm số lượng token.
+#     """
+#     print("\n--- Turbo Vocab Merging SKIPPED (Preserving your Viterbox file) ---")
+    
+#     # Kiểm tra xem folder có tồn tại không
+#     if not os.path.exists(DEST_DIR):
+#         print(f"Error: Directory {DEST_DIR} not found.")
+#         return 0
+
+#     try:
+#         # Thay vì tạo mới từ GPT-2, ta load trực tiếp file bạn đang có
+#         print(f"Loading existing tokenizer from: {DEST_DIR} ...")
+        
+#         # AutoTokenizer sẽ tự tìm file tokenizer.json trong thư mục này
+#         current_tokenizer = AutoTokenizer.from_pretrained(DEST_DIR)
+        
+#         final_len = len(current_tokenizer)
+        
+#         print(f"   SUCCESS! Loaded tokenizer successfully.")
+#         print(f"   Current Vocab Size (Final Len): {final_len}")
+#         print("   (No changes were made to the file)")
+
+#         return final_len
+
+#     except Exception as e:
+#         print(f"ERROR: Không thể đọc Tokenizer từ {DEST_DIR}.")
+#         print(f"Details: {e}")
+#         return 0
 
 def test_merge_tokenizer_process(tokenizer_path):
     
