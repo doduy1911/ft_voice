@@ -8,8 +8,8 @@ from faster_whisper import WhisperModel
 # =====================
 # CONFIG
 # =====================
-INPUT_WAV_DIR = "/kaggle/working/ft_voice/voice_v2/clean_dataset_nam_v2"
-OUTPUT_DIR = "/kaggle/working/ft_voice/voice_v2/data/output_nam_v2"
+INPUT_WAV_DIR = "clean_dataset_nam_v2"
+OUTPUT_DIR = "data/output_nam_v2"
 CLIP_DIR = os.path.join(OUTPUT_DIR, "clips")
 
 TARGET_SR = 16000
