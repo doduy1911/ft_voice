@@ -3,7 +3,7 @@ import subprocess
 from pydub import AudioSegment, silence
 
 # --- CẤU HÌNH ---
-INPUT_FOLDER = "/ft_voice/voice_v2/data_ytb/nu1"      # Folder chứa voice gốc của client
+INPUT_FOLDER = "/ft_voice/voice_v2/data-ytb/nu1"      # Folder chứa voice gốc của client
 OUTPUT_FOLDER = "/ft_voice/voice_v2/clean_dataset_nu" # Folder chứa kết quả
 TEMP_FOLDER = "/ft_voice/voice_v2/temp_denoised_nu"   # Folder trung gian
 
