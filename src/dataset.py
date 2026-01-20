@@ -28,8 +28,7 @@ class ChatterboxDataset(Dataset):
 
         self.sot_token = config.start_text_token 
         self.eot_token = config.stop_text_token
-
-
+        
     def __len__(self):
         return len(self.files)
 

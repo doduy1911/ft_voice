@@ -32,6 +32,7 @@ if IS_TURBO:
         "temperature": 0.8,
         "exaggeration": 0.5,
         "repetition_penalty": 1.2,
+        "language": "vi"
     }
 else:
     
@@ -44,7 +45,7 @@ else:
     }
 
 
-TEXT_TO_SAY = "[VI]Mới thử xong, bắt chước giọng nói tệ quá. Nếu bạn đang tìm cái gì tương tự, thử VoxCPM đi, mới ra mắt có vài ngày thôi. Chả được chú ý như nó đáng."
+TEXT_TO_SAY = "This repository operates in two distinct modes, controlled by the is_turbo setting in src/config.py. Please decide which mode you need before you begin."
 AUDIO_PROMPT = "./2.wav"
 OUTPUT_FILE = "./output.wav"
 

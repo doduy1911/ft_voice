@@ -3,45 +3,60 @@ import csv
 import io
 import soundfile as sf
 import librosa
-from datasets import load_dataset
+from datasets import load_dataset, Audio  # <--- Đã thêm Audio để cấu hình
 from tqdm import tqdm
 from dotenv import load_dotenv
+
+# Load biến môi trường (HF_TOKEN)
 load_dotenv() 
+
 # --- CẤU HÌNH ---
-DATASET_NAME = "pnnbao-ump/VieNeu-TTS-140h"
+DATASET_NAME = "capleaf/viVoice"
 OUTPUT_DIR = "MyTTSDataset"
 WAV_DIR = os.path.join(OUTPUT_DIR, "wavs")
 METADATA_PATH = os.path.join(OUTPUT_DIR, "metadata.csv")
-MAX_SAMPLES = 2000
+
+# Số lượng mẫu muốn tải. (Set None để tải hết)
+MAX_SAMPLES = 5000 
+
 HF_TOKEN = os.getenv("HF_TOKEN")   
+
 def main():
-    print(f"Dang tai dataset: {DATASET_NAME}...")
+    print(f"Đang kết nối tới dataset: {DATASET_NAME}...")
     
     try:
-        # Load dataset với streaming=True
+        # 1. Load dataset (Streaming)
         dataset = load_dataset(DATASET_NAME, split="train", streaming=True, token=HF_TOKEN)
+        
+        # 2. QUAN TRỌNG: Tắt decode tự động
+        # Lệnh này bảo thư viện không dùng torchcodec/ffmpeg để giải mã nữa
+        # mà trả về raw bytes trực tiếp. Tránh hoàn toàn lỗi ImportError.
+        dataset = dataset.cast_column("audio", Audio(decode=False))
+        
     except Exception as e:
         print(f"Lỗi khởi tạo dataset: {e}")
         return
 
     os.makedirs(WAV_DIR, exist_ok=True)
-    print("Dang xu ly va luu file (Da sua loi 'array')...")
+    print(f"Đang xử lý audio và lưu vào {OUTPUT_DIR}...")
     
     with open(METADATA_PATH, "w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f, delimiter="|")
         
         count = 0
+        # Duyệt qua từng dòng
         for item in tqdm(dataset):
-            if MAX_SAMPLES and count >= MAX_SAMPLES:
+            if MAX_SAMPLES is not None and count >= MAX_SAMPLES:
+                print(f"\nĐã đạt giới hạn {MAX_SAMPLES} mẫu. Dừng tải.")
                 break
                 
             try:
                 # 1. Lấy Text
-                text_content = item.get('text') or item.get('sentence') or item.get('transcript')
+                text_content = item.get('transcript') or item.get('content') or item.get('text') or item.get('sentence')
                 if not text_content:
                     continue
 
-                # 2. Xử lý Audio (Phần quan trọng đã sửa)
+                # 2. Xử lý Audio (Lấy từ raw bytes)
                 audio_info = item.get('audio')
                 if not audio_info:
                     continue
@@ -49,33 +64,27 @@ def main():
                 audio_array = None
                 sr = None
 
-                # Trường hợp A: Đã có sẵn array (Lý tưởng)
-                if 'array' in audio_info:
-                    audio_array = audio_info['array']
-                    sr = audio_info['sampling_rate']
-                
-                # Trường hợp B: Chỉ có bytes (Lỗi bạn đang gặp) -> Tự decode
-                elif 'bytes' in audio_info:
+                # Vì đã tắt decode=False, dữ liệu sẽ luôn nằm trong 'bytes' hoặc 'path'
+                if 'bytes' in audio_info:
                     audio_bytes = audio_info['bytes']
-                    # Dùng soundfile để đọc từ bytes
-                    audio_array, sr = sf.read(io.BytesIO(audio_bytes))
+                    if audio_bytes:
+                        # Dùng soundfile để đọc trực tiếp từ RAM
+                        audio_array, sr = sf.read(io.BytesIO(audio_bytes))
                 
-                # Trường hợp C: Chỉ có path (Ít gặp khi streaming)
+                # Fallback nếu soundfile không đọc được bytes (hiếm gặp)
                 elif 'path' in audio_info:
-                     # Nếu cần thiết mới tải, nhưng thường 'bytes' sẽ đi kèm
-                     print(f"Bỏ qua mẫu {count}: Chỉ có path, không có data.")
-                     continue
+                     if audio_info['path'].endswith('.wav'):
+                         audio_array, sr = sf.read(audio_info['path'])
 
                 if audio_array is None:
                     continue
 
-                # 3. Resample về 16kHz (Chuẩn cho Chatterbox)
-                # Dataset gốc là 24kHz, ta nên đưa về 16kHz để nhẹ và đúng chuẩn train
+                # 3. Resample về 16kHz
                 if sr != 16000:
                     audio_array = librosa.resample(audio_array, orig_sr=sr, target_sr=16000)
                     sr = 16000
 
-                # 4. Lưu file
+                # 4. Lưu file WAV
                 filename = f"audio_{count:05d}"
                 wav_path = os.path.join(WAV_DIR, f"{filename}.wav")
                 sf.write(wav_path, audio_array, sr)
@@ -86,14 +95,12 @@ def main():
                 count += 1
                 
             except Exception as e:
-                # In chi tiết lỗi để debug nếu còn bị
-                print(f"\nLỗi mẫu {count}: {e}")
-                # Kiểm tra xem key thực tế là gì
-                if 'audio' in item:
-                    print(f"Keys trong audio: {item['audio'].keys()}")
+                # Bỏ qua lỗi nhỏ để không dừng toàn bộ quá trình
+                # print(f"Lỗi mẫu {count}: {e}") 
                 continue
 
     print(f"\n✅ Hoàn tất! Đã lưu {count} mẫu vào '{OUTPUT_DIR}'.")
+    print(f"👉 File metadata nằm tại: {METADATA_PATH}")
 
 if __name__ == "__main__":
     main()

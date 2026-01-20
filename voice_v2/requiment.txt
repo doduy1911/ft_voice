@@ -1,0 +1,11 @@
+yt-dlp
+ffmpeg
+deepfilternet
+pydub
+torch==2.0.1
+torchaudio==2.0.2
+openai-whisper
+librosa
+soundfile
+faster-whisper
+typeguard

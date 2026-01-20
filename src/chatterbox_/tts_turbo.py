@@ -2,7 +2,7 @@ import os
 import math
 from dataclasses import dataclass
 from pathlib import Path
-
+from .models.tokenizers.tokenizer import EnTokenizer
 import librosa
 import torch
 import perth
