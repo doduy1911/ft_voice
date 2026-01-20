@@ -8,8 +8,8 @@ from faster_whisper import WhisperModel
 # =====================
 # CONFIG
 # =====================
-INPUT_WAV_DIR = "clean_dataset_nu"
-OUTPUT_DIR = "data/v2/output_nu"
+INPUT_WAV_DIR = "/ft_voice/voice_v2/clean_dataset_nu"
+OUTPUT_DIR = "/ft_voice/voice_v2/data/v2/output_nu"
 CLIP_DIR = os.path.join(OUTPUT_DIR, "clips")
 
 TARGET_SR = 16000
